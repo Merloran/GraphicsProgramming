@@ -1,0 +1,9 @@
+newmtl Toy
+Ns 96.078431
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+illum 2
+map_Bump normal.png
+map_Kd diffuse.png
+map_Ka displacement.png

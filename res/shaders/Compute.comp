@@ -1,0 +1,53 @@
+#version 460 core
+layout (local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
+
+layout (std430, binding = 0) buffer Positions
+{
+    vec4 positions[];
+};
+
+layout (std430, binding = 1) buffer Velocities
+{
+    vec4 velocities[];
+};
+
+layout (std430, binding = 2) buffer LifeTimes
+{
+    vec2 lifetimes[];
+};
+
+uniform float deltaTime;
+uniform vec3 gravity;
+
+float rand(vec2 co)
+{
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+    vec4 position = positions[index];
+    vec4 velocity = velocities[index];
+    vec2 lifetime = lifetimes[index];
+	
+    if (lifetime.x > lifetime.y)
+    {
+        // reset particle
+        position.y = mod(rand(vec2(0.0f, index) * deltaTime) * 3.5f, 3.5f);
+        lifetime.x = 0.0f;
+    }
+	else
+	{
+		// update position
+		position.y += velocity.y * deltaTime;
+
+		// update lifetime
+		lifetime.x += deltaTime;
+	}
+
+    // write back data
+    positions[index] = position;
+    velocities[index] = velocity;
+    lifetimes[index] = lifetime;
+}
