@@ -23,9 +23,9 @@ layout (location = 0) out VSOut
 void main()
 {
     vsOut.TexCoords = aTexCoords;
-    vsOut.WorldPos = vec3(model * vec4(aPos, 1.0));
+    vsOut.WorldPos = vec3(model * vec4(aPos, 1.0f));
     vsOut.Normal = mat3(model) * aNormal;   
 
-    gl_Position =  projection * view * vec4(vsOut.WorldPos, 1.0);
+    gl_Position =  projection * view * vec4(vsOut.WorldPos, 1.0f);
     vsOut.WorldPosLightSpace = lightSpace * vec4(vsOut.WorldPos, 1.0f);
 }

@@ -13,10 +13,14 @@
 #include "Public/ParticleSystem.h"
 
 #include "Public/Model.h"
+#include "Public/SkinnedModel.h"
 #include "Public/InstancedModel.h"
 #include "Public/Cube.h"
 #include "Public/Quad.h"
 #include "Public/Entity.h"
+
+#include "Public/Animation.h"
+#include "Public/Animator.h"
 
 #include "Public/PointLight.h"
 #include "Public/DirectionalLight.h"
@@ -162,6 +166,7 @@ int main(int, char**)
     Shader instanceShader("res/shaders/Instance.vs", "res/shaders/Instance.fs");
     Shader particleShader("res/shaders/Particle.vert", "res/shaders/Particle.frag");
     Shader computeShader("res/shaders/Compute.comp");
+    Shader animationShader("res/shaders/PBR/AnimationPBR.vs", "res/shaders/PBR/PBR.fs");
 
     Shader PBRShader("res/shaders/PBR/PBR.vs", "res/shaders/PBR/PBR.fs");
     Shader equirectangularShader("res/shaders/PBR/CubeMap.vs", "res/shaders/PBR/Equirectangular.fs");
@@ -169,7 +174,11 @@ int main(int, char**)
     Shader prefilterShader("res/shaders/PBR/CubeMap.vs", "res/shaders/PBR/Prefilter.fs");
     Shader BRDFShader("res/shaders/PBR/BRDF.vs", "res/shaders/PBR/BRDF.fs");
 
-    Model generator("res/models/generator/generator.obj");
+    SkinnedModel animatedModel("res/models/AnimatedFBX/CowBoy.gltf");
+    Animation danceAnimation("res/models/AnimatedFBX/CowBoy.gltf", &animatedModel);
+    Animator animator(&danceAnimation);
+
+
     // pbr: load the HDR environment map
     // ---------------------------------
     Texture HDR("res/textures/Canyon/Canyon.hdr");
@@ -240,11 +249,11 @@ int main(int, char**)
         lights.push_back(&light);
     }
 
-
     Entity Root;
 
-    Root.AddChild(generator, "Generator", PBRShader);
+    Root.AddChild(animatedModel, "AnimatedModel", animationShader);
     Root.children.back().get()->transform.SetLocalPosition(glm::vec3(8.0f, -2.0f, 0.0f));
+    Root.children.back().get()->transform.SetLocalScale(glm::vec3(0.1f));
 
     Root.AddChild(pointLights[0], "PointLight1", lightShader);
     Root.AddChild(pointLights[1], "PointLight2", lightShader);
@@ -256,7 +265,6 @@ int main(int, char**)
     Root.UpdateSelfAndChildren();
 
     Shadow DirLightShadow(2048, 2048);
-
 
     // Framebuffer for post-processing
     GLuint FBO, CBO[2], RBO;
@@ -347,7 +355,7 @@ int main(int, char**)
     screenShader.Use();
     screenShader.setInt("screenTexture", 0);
     screenShader.setInt("bloomBlur", 1);
-
+    
     PBRShader.Use();
     Irradiance.BindCubeMap(6);
     PBRShader.setInt("irradianceMap", 6);
@@ -358,7 +366,17 @@ int main(int, char**)
     DirLightShadow.BindShadowMap(9);
     PBRShader.setInt("shadowMap", 9);
 
-    int winWidth = WINDOW_WIDTH, winHeight = WINDOW_HEIGHT;
+    animationShader.Use();
+    Irradiance.BindCubeMap(6);
+    animationShader.setInt("irradianceMap", 6);
+    Prefilter.BindCubeMap(7);
+    animationShader.setInt("prefilterMap", 7);
+    BRDF.BindTexture(8);
+    animationShader.setInt("brdfLUT", 8);
+    DirLightShadow.BindShadowMap(9);
+    animationShader.setInt("shadowMap", 9);
+
+    int32_t winWidth = WINDOW_WIDTH, winHeight = WINDOW_HEIGHT;
 
     glfwSetScrollCallback(window, MouseCallback);
     glfwSetKeyCallback(window, KeyCallback);
@@ -369,6 +387,7 @@ int main(int, char**)
     normalShader.setBlock("Matrixes", 0);
     particleShader.setBlock("Matrixes", 0);
     PBRShader.setBlock("Matrixes", 0);
+    animationShader.setBlock("Matrixes", 0);
 
 
     ColliderAABB TEST(glm::vec3(0.0f), glm::vec3(1.0f));
@@ -457,6 +476,7 @@ int main(int, char**)
         }
 
 
+
         Shader::bindUniformData(UBO, 0, sizeof(glm::mat4), glm::value_ptr(view));
         Shader::bindUniformData(UBO, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
 
@@ -535,7 +555,6 @@ int main(int, char**)
                 Tester.Center.y -= speed;
             }
         }
-
         //===============================***PBR***===============================
         PBRShader.Use();
         {
@@ -552,8 +571,25 @@ int main(int, char**)
 
             PBRShader.setVec3("camPos", camera.Position);
         }
-        Root.DrawSelfAndChildren();
+        animationShader.Use();
+        {
+            animator.UpdateAnimation(deltaTime);
+            std::vector<glm::mat4> transforms = animator.GetFinalBoneMatrices();
+            for (int32_t i = 0; i < transforms.size(); ++i)
+            {
+                animationShader.setMat4(("finalBonesMatrices[" + std::to_string(i) + "]").c_str(), transforms[i]);
+            }
 
+            animationShader.setMat4("lightSpace", DirLightShadow.GetLightSpace());
+
+            for (Light* light : lights)
+            {
+                light->SetupShader(animationShader);
+            }
+
+            animationShader.setVec3("camPos", camera.Position);
+        }
+        Root.DrawSelfAndChildren();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // TODO: Draw lines insted of swap polygon mode
         TEST.Draw(lightShader);

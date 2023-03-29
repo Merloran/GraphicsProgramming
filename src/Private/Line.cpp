@@ -29,3 +29,9 @@ void Line::Draw(Shader& Shader)
     glDrawArrays(GL_LINE_STRIP, 0, 2);
     glBindVertexArray(0);
 }
+
+Line::~Line()
+{
+	//glDeleteBuffers(1, &m_VBO);
+	//glDeleteVertexArrays(1, &m_VAO);
+}

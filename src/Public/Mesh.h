@@ -22,6 +22,8 @@ public:
     std::vector<unsigned int> Indexes;
     std::vector<Texture> Textures;
 
+    static inline std::vector<Texture> DefaultTextures = {};
+
     Mesh(std::vector<Vertex> vertexes, std::vector<unsigned int> indexes, std::vector<Texture> textures);
     Mesh(const Mesh& Other);
     Mesh(Mesh&& Other) noexcept;
@@ -39,8 +41,8 @@ public:
     unsigned int GetVBO();
     unsigned int GetEBO();
 
-private:
+protected:
     unsigned int m_VBO, m_VAO, m_EBO;
-    void SetupMesh();
+    virtual void SetupMesh();
 };
 

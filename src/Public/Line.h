@@ -10,7 +10,7 @@ public:
 
     void Draw(Shader& Shader) override;
 
-    ~Line() = default;
+    ~Line();
     float vertices[6];
 private:
     unsigned int m_VAO, m_VBO;

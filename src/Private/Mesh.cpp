@@ -4,7 +4,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 Mesh::Mesh(std::vector<Vertex> vertexes, std::vector<unsigned int> indexes, std::vector<Texture> textures)
     : m_VBO(0)
     , m_VAO(0)
@@ -13,6 +12,31 @@ Mesh::Mesh(std::vector<Vertex> vertexes, std::vector<unsigned int> indexes, std:
     , Indexes(indexes)
     , Textures(textures)
 {
+    if (Mesh::DefaultTextures.empty())
+    {
+        Texture texture = Texture("res/textures/DefaultTextures/BaseColor.png", true);
+        Mesh::DefaultTextures.push_back(texture);
+
+        texture = Texture("res/textures/DefaultTextures/Normal.png", false);
+        Mesh::DefaultTextures.push_back(texture);
+
+        texture = Texture("res/textures/DefaultTextures/Emissive.png", false);
+        Mesh::DefaultTextures.push_back(texture);
+
+        texture = Texture("res/textures/DefaultTextures/Roughness.png", false);
+        Mesh::DefaultTextures.push_back(texture);
+
+        texture = Texture("res/textures/DefaultTextures/Metalness.png", false);
+        Mesh::DefaultTextures.push_back(texture);
+
+        texture = Texture("res/textures/DefaultTextures/AO.png", false);
+        Mesh::DefaultTextures.push_back(texture);
+
+        for (int i = 0; i < Mesh::DefaultTextures.size(); ++i)
+        {
+            Mesh::DefaultTextures[i].BindTexture(31 - i);
+        }
+    }
     SetupMesh();
 }
 
@@ -24,9 +48,9 @@ Mesh::Mesh(const Mesh& Other)
     , Indexes(Other.Indexes)
     , Textures(Other.Textures)
 {
-    const_cast<Mesh&>(Other).m_VBO = NULL;
-    const_cast<Mesh&>(Other).m_VAO = NULL;
-    const_cast<Mesh&>(Other).m_EBO = NULL;
+    const_cast<Mesh&>(Other).m_VBO = 0;
+    const_cast<Mesh&>(Other).m_VAO = 0;
+    const_cast<Mesh&>(Other).m_EBO = 0;
 }
 
 Mesh::Mesh(Mesh&& Other) noexcept
@@ -37,19 +61,19 @@ Mesh::Mesh(Mesh&& Other) noexcept
     , Indexes(Other.Indexes)
     , Textures(Other.Textures)
 {
-    Other.m_VBO = NULL;
-    Other.m_VAO = NULL;
-    Other.m_EBO = NULL;
+    Other.m_VBO = 0;
+    Other.m_VAO = 0;
+    Other.m_EBO = 0;
 }
 
 Mesh::~Mesh()
 {
     glDeleteBuffers(1, &m_VBO);
-    m_VBO = NULL;
+    m_VBO = 0;
     glDeleteBuffers(1, &m_EBO);
-    m_EBO = NULL;
+    m_EBO = 0;
     glDeleteVertexArrays(1, &m_VAO);
-    m_VAO = NULL;
+    m_VAO = 0;
     Vertexes.clear();
     Indexes.clear();
     Textures.clear();
@@ -120,16 +144,21 @@ void Mesh::SetupMesh()
 
 void Mesh::ResetTextures(Shader& Shader)
 {
-    Shader.setInt("material.albedo[0]", 31);
-    Shader.setInt("material.normal[0]", 31);
-    Shader.setInt("material.emission[0]", 31);
-    Shader.setInt("material.metalness[0]", 31);
-    Shader.setInt("material.roughness[0]", 31);
-    Shader.setInt("material.ambientocclusion[0]", 31);
+    for (int i = 0; i < Mesh::DefaultTextures.size(); ++i)
+    {
+        Mesh::DefaultTextures[i].BindTexture(31 - i);
+    }
+    Shader.setInt("material.albedo[0]"          , 31);
+    Shader.setInt("material.normal[0]"          , 30);
+    Shader.setInt("material.emission[0]"        , 29);
+    Shader.setInt("material.metalness[0]"       , 28);
+    Shader.setInt("material.roughness[0]"       , 27);
+    Shader.setInt("material.ambientocclusion[0]", 26);
 }
 
 void Mesh::Draw(Shader& Shader, unsigned int Amount)
 {
+    ResetTextures(Shader);
     unsigned int textureNrs[(int)TextureType::TYPESCOUNT];
     std::fill(textureNrs, textureNrs + (int)TextureType::TYPESCOUNT, 0U);
     std::string number;

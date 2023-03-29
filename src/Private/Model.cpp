@@ -71,7 +71,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-    for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
+    for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
     {
         Vertex vertex;
         glm::vec3 vector;
@@ -103,10 +103,10 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         vertices.push_back(vertex);
     }
 
-    for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
+    for (uint32_t i = 0; i < mesh->mNumFaces; ++i)
     {
         aiFace face = mesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; ++j)
+        for (uint32_t j = 0; j < face.mNumIndices; ++j)
         {
             indices.push_back(face.mIndices[j]);
         }
@@ -232,7 +232,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
             Texture texture;
             if (typeName == TextureType::ALBEDO)
             {
-                texture = Texture(typeName, m_Directory + "/" + str.C_Str(), true);
+                texture = Texture(typeName, m_Directory + "/" + str.C_Str());
             }
             else
             {
