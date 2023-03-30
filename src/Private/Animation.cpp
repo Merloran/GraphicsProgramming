@@ -62,7 +62,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, SkinnedModel& mod
 {
 	int32_t size = animation->mNumChannels;
 
-	std::map<std::string, BoneInfo>& boneInfoMap = model.GetBoneInfoMap();//getting m_BoneInfoMap from Model class
+	std::map<std::string, BoneInfo>& modelBoneInfoMap = model.GetBoneInfoMap();//getting m_BoneInfoMap from Model class
 	int32_t boneCount = model.GetBoneCount(); //getting the m_BoneCounter from Model class
 
 	//reading channels(bones engaged in an animation and their keyframes)
@@ -71,15 +71,15 @@ void Animation::ReadMissingBones(const aiAnimation* animation, SkinnedModel& mod
 		aiNodeAnim* channel = animation->mChannels[i];
 		std::string boneName = channel->mNodeName.data;
 
-		if (boneInfoMap.find(boneName) == boneInfoMap.end())
+		if (modelBoneInfoMap.find(boneName) == modelBoneInfoMap.end())
 		{
-			boneInfoMap[boneName].ID = boneCount;
+			modelBoneInfoMap[boneName].ID = boneCount;
 			boneCount++;
 		}
-		m_Bones.push_back(Bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].ID, channel));
+		m_Bones.push_back(Bone(channel->mNodeName.data, modelBoneInfoMap[channel->mNodeName.data].ID, channel));
 	}
 
-	m_BoneInfoMap = boneInfoMap;
+	m_BoneInfoMap = modelBoneInfoMap;
 }
 
 void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)

@@ -239,9 +239,21 @@ void SkinnedModel::ExtractBoneWeightForVertices(std::vector<SkinnedVertex>& vert
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
         if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
         {
+            aiVector3D pos;
+            aiQuaternion rot;
             BoneInfo newBoneInfo;
             newBoneInfo.ID = m_BoneCounter;
-            newBoneInfo.Offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+            //newBoneInfo.Offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+            mesh->mBones[boneIndex]->mOffsetMatrix.DecomposeNoScaling(rot, pos);
+            newBoneInfo.Position.x = pos.x;
+            newBoneInfo.Position.y = pos.y;
+            newBoneInfo.Position.z = pos.z;
+
+            newBoneInfo.Rotation.x = rot.x;
+            newBoneInfo.Rotation.y = rot.y;
+            newBoneInfo.Rotation.z = rot.z;
+            newBoneInfo.Rotation.w = rot.w;
+
             m_BoneInfoMap[boneName] = newBoneInfo;
             boneID = m_BoneCounter;
             m_BoneCounter++;

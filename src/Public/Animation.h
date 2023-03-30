@@ -29,7 +29,6 @@ public:
 
 	Bone* FindBone(const std::string& name);
 
-
 	float GetTicksPerSecond();
 	float GetDuration();
 	const AssimpNodeData& GetRootNode();
