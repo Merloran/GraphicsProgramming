@@ -243,18 +243,25 @@ void SkinnedModel::ExtractBoneWeightForVertices(std::vector<SkinnedVertex>& vert
             aiQuaternion rot;
             BoneInfo newBoneInfo;
             newBoneInfo.ID = m_BoneCounter;
-            //newBoneInfo.Offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
             mesh->mBones[boneIndex]->mOffsetMatrix.DecomposeNoScaling(rot, pos);
-            newBoneInfo.Position.x = pos.x;
-            newBoneInfo.Position.y = pos.y;
-            newBoneInfo.Position.z = pos.z;
 
-            newBoneInfo.Rotation.x = rot.x;
-            newBoneInfo.Rotation.y = rot.y;
-            newBoneInfo.Rotation.z = rot.z;
-            newBoneInfo.Rotation.w = rot.w;
+            glm::vec3 glmPos = AnimationOptimizer::GetGLMVec(pos);
+            glm::quat glmRot = AnimationOptimizer::GetGLMQuat(rot);
+
+            uint16_t posComp[3]; 
+            AnimationOptimizer::Vec4Com16bit(glm::vec4(glmPos, 0.0f), posComp);
+            uint16_t rotComp[3]; 
+            AnimationOptimizer::QuatFhm16bit(glmRot, rotComp);
+            newBoneInfo.Position[0] = posComp[0];
+            newBoneInfo.Position[1] = posComp[1];
+            newBoneInfo.Position[2] = posComp[2];
+
+            newBoneInfo.Rotation[0] = rotComp[0];
+            newBoneInfo.Rotation[1] = rotComp[1];
+            newBoneInfo.Rotation[2] = rotComp[2];
 
             m_BoneInfoMap[boneName] = newBoneInfo;
+
             boneID = m_BoneCounter;
             m_BoneCounter++;
         }

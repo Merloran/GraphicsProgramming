@@ -1,6 +1,7 @@
 #include "Public/Animator.h"
 #include "Public/Animation.h"
 #include "Public/Bone.h"
+#include <iostream>
 
 Animator::Animator(Animation* animation)
 {
@@ -52,8 +53,11 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 pare
 	{
 		int32_t index = boneInfoMap[nodeName].ID;
 
-		glm::mat4 offset = glm::translate(glm::mat4(1.0f), boneInfoMap[nodeName].Position);
-		offset *= glm::toMat4(boneInfoMap[nodeName].Rotation);
+		glm::vec3 posDecomp = AnimationOptimizer::Vec4Decom16bit(boneInfoMap[nodeName].Position);
+		glm::quat rotDecomp = AnimationOptimizer::QuatIhm16bit(boneInfoMap[nodeName].Rotation);
+
+		glm::mat4 offset = glm::translate(glm::mat4(1.0f), posDecomp);
+		offset *= glm::toMat4(rotDecomp);
 
 		m_FinalBoneMatrices[index] = globalTransformation * offset;
 	}

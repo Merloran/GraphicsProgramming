@@ -174,8 +174,11 @@ int main(int, char**)
     Shader prefilterShader("res/shaders/PBR/CubeMap.vs", "res/shaders/PBR/Prefilter.fs");
     Shader BRDFShader("res/shaders/PBR/BRDF.vs", "res/shaders/PBR/BRDF.fs");
 
-    SkinnedModel animatedModel("res/models/AnimatedFBX/CowBoy.gltf");
-    Animation danceAnimation("res/models/AnimatedFBX/CowBoy.gltf", &animatedModel);
+    Model cameraModel("res/models/Camera/camera01.gltf");
+    Model cameraModel1("res/models/Camera/camera02.gltf");
+    Model cameraModel2("res/models/Camera/camera03.gltf");
+    SkinnedModel animatedModel("res/models/AnimatedFBX/CesiumMan.gltf");
+    Animation danceAnimation("res/models/AnimatedFBX/CesiumMan.gltf", &animatedModel);
     Animator animator(&danceAnimation);
 
 
@@ -253,7 +256,12 @@ int main(int, char**)
 
     Root.AddChild(animatedModel, "AnimatedModel", animationShader);
     Root.children.back().get()->transform.SetLocalPosition(glm::vec3(8.0f, -2.0f, 0.0f));
-    Root.children.back().get()->transform.SetLocalScale(glm::vec3(0.1f));
+
+    Root.AddChild(cameraModel2, "CameraModel", PBRShader);
+    Root.children.back().get()->transform.SetLocalScale(glm::vec3(0.01f));
+    Root.children.back().get()->AddChild(cameraModel1, "CameraModel1", PBRShader);
+    Root.children.back().get()->children.back().get()->transform.SetLocalScale(glm::vec3(100.0f));
+    Root.children.back().get()->children.back().get()->AddChild(cameraModel, "CameraModel2", PBRShader);
 
     Root.AddChild(pointLights[0], "PointLight1", lightShader);
     Root.AddChild(pointLights[1], "PointLight2", lightShader);

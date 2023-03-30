@@ -1,0 +1,310 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.40",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Plane",
+            "rotation" : [
+                -1,
+                0,
+                0,
+                4.371138828673793e-08
+            ],
+            "translation" : [
+                7.99819827079773e-06,
+                0.07908788323402405,
+                -0.1752057522535324
+            ]
+        },
+        {
+            "mesh" : 1,
+            "name" : "camera01"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                1,
+                1,
+                1
+            ],
+            "emissiveTexture" : {
+                "index" : 0
+            },
+            "name" : "glass",
+            "normalTexture" : {
+                "index" : 1
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 2
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 3
+                }
+            }
+        },
+        {
+            "doubleSided" : true,
+            "emissiveTexture" : {
+                "index" : 4
+            },
+            "name" : "cam1",
+            "normalTexture" : {
+                "index" : 5
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 6
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 7
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Plane",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Mesh.014",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "indices" : 7,
+                    "material" : 1
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        },
+        {
+            "sampler" : 0,
+            "source" : 3
+        },
+        {
+            "sampler" : 0,
+            "source" : 4
+        },
+        {
+            "sampler" : 0,
+            "source" : 5
+        },
+        {
+            "sampler" : 0,
+            "source" : 6
+        },
+        {
+            "sampler" : 0,
+            "source" : 7
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "glass_Emissive",
+            "uri" : "textures/glass_Emissive.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "glass_Normal",
+            "uri" : "textures/glass_Normal.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "glass_Base_color-glass_Opacity",
+            "uri" : "textures/glass_Base_color-glass_Opacity.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "glass_Metallic-glass_Roughness",
+            "uri" : "textures/glass_Metallic-glass_Roughness.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam1_Emissive",
+            "uri" : "textures/cam1_Emissive.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam1_Normal",
+            "uri" : "textures/cam1_Normal.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam1_Base_color-cam1_Opacity",
+            "uri" : "textures/cam1_Base_color-cam1_Opacity.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam1_Metallic-cam1_Roughness",
+            "uri" : "textures/cam1_Metallic-cam1_Roughness.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 4,
+            "max" : [
+                0.03999999910593033,
+                0.02499999850988388,
+                0
+            ],
+            "min" : [
+                -0.03999999910593033,
+                -0.025000005960464478,
+                0
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 4,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 4,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 6,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 2226,
+            "max" : [
+                0.061749737709760666,
+                0.1279180496931076,
+                0.09864794462919235
+            ],
+            "min" : [
+                -0.061749737709760666,
+                -0.013980708085000515,
+                -0.21853190660476685
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 2226,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 2226,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5123,
+            "count" : 9348,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 48,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 48,
+            "byteOffset" : 48
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 32,
+            "byteOffset" : 96
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 12,
+            "byteOffset" : 128
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 26712,
+            "byteOffset" : 140
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 26712,
+            "byteOffset" : 26852
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 17808,
+            "byteOffset" : 53564
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 18696,
+            "byteOffset" : 71372
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 90068,
+            "uri" : "camera01.bin"
+        }
+    ]
+}

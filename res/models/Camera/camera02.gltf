@@ -1,0 +1,167 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.40",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "camera02"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveTexture" : {
+                "index" : 0
+            },
+            "name" : "cam2",
+            "normalTexture" : {
+                "index" : 1
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 2
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 3
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Mesh.015",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        },
+        {
+            "sampler" : 0,
+            "source" : 3
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "cam2_Emissive",
+            "uri" : "textures/cam2_Emissive.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam2_Normal",
+            "uri" : "textures/cam2_Normal.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam2_Base_color-cam2_Opacity",
+            "uri" : "textures/cam2_Base_color-cam2_Opacity.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "cam2_Metallic-cam2_Roughness",
+            "uri" : "textures/cam2_Metallic-cam2_Roughness.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 536,
+            "max" : [
+                0.01361715979874134,
+                0.040139004588127136,
+                0.01483151689171791
+            ],
+            "min" : [
+                -0.013758544810116291,
+                -0.0038552358746528625,
+                -0.014831519685685635
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 536,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 536,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 2076,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 6432,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 6432,
+            "byteOffset" : 6432
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 4288,
+            "byteOffset" : 12864
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 4152,
+            "byteOffset" : 17152
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 21304,
+            "uri" : "camera02.bin"
+        }
+    ]
+}

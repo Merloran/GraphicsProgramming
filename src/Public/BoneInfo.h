@@ -13,8 +13,10 @@ struct BoneInfo
 
 	/*offset matrix transforms vertex from model space to bone space*/
 	//glm::mat4 Offset;
-	glm::vec3 Position;
-	glm::quat Rotation;
+	//glm::vec3 Position;
+	//glm::quat Rotation;
+	uint16_t Position[3];
+	uint16_t Rotation[3];
 
 };
 
@@ -33,16 +35,35 @@ public:
 		return glm::quat(pOrientation.w, pOrientation.x, pOrientation.y, pOrientation.z);
 	}
 
-	static uint16_t* QuatFhm16bit(const glm::quat& q)
+	static void QuatFhm16bit(const glm::quat& q, uint16_t* result)
 	{
 		glm::vec3 vec = QuatFhm(q);
-		return Vec3To16bit(vec);
+		Vec3To16bit(vec, result);
 	}
 
 	static glm::quat QuatIhm16bit(const uint16_t* b)
 	{
 		glm::vec3 vec = I6bitToVec3(b);
 		return QuatIhm(vec);
+	}
+
+	static void Vec4Com16bit(const glm::vec4& v, uint16_t* result)
+	{
+		glm::vec3 vec = glm::vec3(v.x / PosRange, v.y / PosRange, v.z / PosRange);
+		Vec3To16bit(vec, result);
+	}
+
+	static glm::vec4 Vec4Decom16bit(const uint16_t* b)
+	{
+		glm::vec3 vec = I6bitToVec3(b);
+
+		glm::vec4 result;
+		result.x = vec.x * PosRange;
+		result.y = vec.y * PosRange;
+		result.z = vec.z * PosRange;
+		result.w = 0.0f;
+
+		return result;
 	}
 
 private:
@@ -98,44 +119,20 @@ private:
 		return uint16_t(((Value + 1.0f) / 2.0f) * 65535.0f);
 	}
 
-	static uint16_t* Vec3To16bit(const glm::vec3& v)
+	static void Vec3To16bit(const glm::vec3& v, uint16_t* result)
 	{
-		uint16_t result[3];
-
 		result[0] = CompressFloatMinusOnePlusOne(v.x);
 		result[1] = CompressFloatMinusOnePlusOne(v.y);
 		result[2] = CompressFloatMinusOnePlusOne(v.z);
-
-		return result;
 	}
 
 	static glm::vec3 I6bitToVec3(const uint16_t* b)
 	{
 		glm::vec3 result;
 
-		result.x = CompressFloatMinusOnePlusOne(b[0]);
-		result.y = CompressFloatMinusOnePlusOne(b[1]);
-		result.z = CompressFloatMinusOnePlusOne(b[2]);
-
-		return result;
-	}
-
-	static uint16_t* Vec4Com16bit(const glm::vec4& v)
-	{
-		glm::vec3 vec = glm::vec3(v.x / PosRange, v.y / PosRange, v.z / PosRange);
-
-		return Vec3To16bit(vec);
-	}
-
-	static glm::vec4 Vec4Decom16bit(const uint16_t* b)
-	{
-		glm::vec3 vec = I6bitToVec3(b);
-
-		glm::vec4 result;
-		result.x = vec.x * PosRange;
-		result.y = vec.y * PosRange;
-		result.z = vec.z * PosRange;
-		result.w = 0.0f;
+		result.x = DecompressFloatMinusOnePlusOne(b[0]);
+		result.y = DecompressFloatMinusOnePlusOne(b[1]);
+		result.z = DecompressFloatMinusOnePlusOne(b[2]);
 
 		return result;
 	}

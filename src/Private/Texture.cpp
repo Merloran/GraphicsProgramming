@@ -183,7 +183,7 @@ void Texture::LoadTexture(bool IsStandarised)
     }
     else
     {
-        fprintf(stderr, "Failed to load texture %s", m_Path.c_str());
+        fprintf(stderr, "Failed to load texture %s\n", m_Path.c_str());
         m_Type = TextureType::NONE;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -237,7 +237,7 @@ void Texture::LoadTextureHDR()
     }
     else
     {
-        fprintf(stderr, "Failed to load texture %s", m_Path.c_str());
+        fprintf(stderr, "Failed to load texture %s\n", m_Path.c_str());
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     stbi_image_free(data);
