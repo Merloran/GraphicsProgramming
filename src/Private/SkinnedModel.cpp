@@ -10,6 +10,22 @@
 SkinnedModel::SkinnedModel(const char* Path)
 {
     LoadModel(Path);
+    static int index = 0;
+    //for (auto& m : m_Meshes)
+    //{
+    //    for (auto& v : m.Vertexes)
+    //    {
+    //        std::cout << "index " << index++ << std::endl;
+    //        std::cout << "w " << v.Weights[0] << " " << v.Weights[1] << " " << v.Weights[2] << " " << v.Weights[3] << std::endl;
+    //        std::cout << "i " << v.BoneIDs[0] << " " << v.BoneIDs[1] << " " << v.BoneIDs[2] << " " << v.BoneIDs[3] << std::endl;
+    //    }
+    //}
+    //for (auto& m : m_BoneInfoMap)
+    //{
+    //    std::cout << m.first << " " << m.second.ID << std::endl;
+    //    std::cout << m.second.Position[0] << " " << m.second.Position[1] << " " << m.second.Position[2] << " " << std::endl;
+    //    std::cout << m.second.Rotation[0] << " " << m.second.Rotation[1] << " " << m.second.Rotation[2] << " " << " " << m.second.Rotation[3] << " " << std::endl;
+    //}
 }
 
 void SkinnedModel::Draw(Shader& Shader)
@@ -247,18 +263,22 @@ void SkinnedModel::ExtractBoneWeightForVertices(std::vector<SkinnedVertex>& vert
 
             glm::vec3 glmPos = AnimationOptimizer::GetGLMVec(pos);
             glm::quat glmRot = AnimationOptimizer::GetGLMQuat(rot);
+            newBoneInfo.Rotation = glmRot;
+            newBoneInfo.Position = glmPos;
+            //uint16_t posComp[3]; 
+            //AnimationOptimizer::Vec4Com16bit(glm::vec4(glmPos, 0.0f), posComp);
+            //uint16_t rotComp[3]; 
+            //AnimationOptimizer::QuatFhm16bit(glmRot, rotComp);
+            //newBoneInfo.Position[0] = posComp[0];
+            //newBoneInfo.Position[1] = posComp[1];
+            //newBoneInfo.Position[2] = posComp[2];
 
-            uint16_t posComp[3]; 
-            AnimationOptimizer::Vec4Com16bit(glm::vec4(glmPos, 0.0f), posComp);
-            uint16_t rotComp[3]; 
-            AnimationOptimizer::QuatFhm16bit(glmRot, rotComp);
-            newBoneInfo.Position[0] = posComp[0];
-            newBoneInfo.Position[1] = posComp[1];
-            newBoneInfo.Position[2] = posComp[2];
-
-            newBoneInfo.Rotation[0] = rotComp[0];
-            newBoneInfo.Rotation[1] = rotComp[1];
-            newBoneInfo.Rotation[2] = rotComp[2];
+            //newBoneInfo.Rotation[0] = rotComp[0];
+            //newBoneInfo.Rotation[1] = rotComp[1];
+            //newBoneInfo.Rotation[2] = rotComp[2];
+            //std::cout << boneName << std::endl;
+            //std::cout << "Pos: " << glmPos[0] << " " << glmPos[1] << " " << glmPos[2] << std::endl;
+            //std::cout << "Rot: " << glmRot[0] << " " << glmRot[1] << " " << glmRot[2] << " " << glmRot[3] << std::endl;
 
             m_BoneInfoMap[boneName] = newBoneInfo;
 
@@ -281,6 +301,10 @@ void SkinnedModel::ExtractBoneWeightForVertices(std::vector<SkinnedVertex>& vert
             SetVertexBoneData(vertices[vertexId], boneID, weight);
         }
     }
+    //for (auto& j : m_BoneInfoMap)
+    //{
+    //    std::cout << j.first << " " << j.second.ID << std::endl;
+    //}
 }
 
 std::vector<Texture> SkinnedModel::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, TextureType typeName)

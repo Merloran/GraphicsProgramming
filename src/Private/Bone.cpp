@@ -1,4 +1,5 @@
 #include "Public/Bone.h"
+#include <iostream>
 
 Bone::Bone(const std::string& name, int32_t ID, const aiNodeAnim* channel)
 	: m_Name(name)
@@ -7,6 +8,7 @@ Bone::Bone(const std::string& name, int32_t ID, const aiNodeAnim* channel)
 {
 	m_NumPositions = channel->mNumPositionKeys;
 
+	//std::cout << channel->mNumPositionKeys << " " << channel->mNumRotationKeys << " " << channel->mNumScalingKeys << std::endl;
 	for (int32_t positionIndex = 0; positionIndex < m_NumPositions; ++positionIndex)
 	{
 		aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
@@ -36,12 +38,35 @@ Bone::Bone(const std::string& name, int32_t ID, const aiNodeAnim* channel)
 		data.timeStamp = timeStamp;
 		m_Rotations.push_back(data);
 	}
+
+	//for (int i = 0; i < m_Positions.size(); ++i)
+	//{
+	//	std::cout << "Pos: " << m_Positions[i].position[0] << " " << m_Positions[i].position[1] << " " << m_Positions[i].position[2] << std::endl;
+	//	std::cout << "Rot: " << m_Rotations[i].orientation[0] << " " << m_Rotations[i].orientation[1] << " " << m_Rotations[i].orientation[2] << " " << m_Rotations[i].orientation[3] << std::endl;
+	//}
 }
 
 void Bone::Update(float animationTime)
 {
 	glm::mat4 translation = InterpolatePosition(animationTime);
 	glm::mat4 rotation = InterpolateRotation(animationTime);
+	//std::cout << m_Name << std::endl;
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	for (int j = 0; j < 4; ++j)
+	//		std::cout << translation[i][j] << " ";
+	//	std::cout << std::endl;
+	//}
+	//std::cout << std::endl;
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	for (int j = 0; j < 4; ++j)
+	//		std::cout << rotation[i][j] << " ";
+	//	std::cout << std::endl;
+	//}
+	//std::cout << std::endl;
+	//std::cout << std::endl;
+
 	m_LocalTransform = translation * rotation;
 }
 
@@ -87,10 +112,9 @@ int32_t Bone::GetRotationIndex(float animationTime)
 
 float Bone::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
 {
-	float scaleFactor = 0.0f;
 	float midWayLength = animationTime - lastTimeStamp;
 	float framesDiff = nextTimeStamp - lastTimeStamp;
-	scaleFactor = midWayLength / framesDiff;
+	float scaleFactor = midWayLength / framesDiff;
 	return scaleFactor;
 }
 

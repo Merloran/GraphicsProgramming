@@ -13,10 +13,10 @@ struct BoneInfo
 
 	/*offset matrix transforms vertex from model space to bone space*/
 	//glm::mat4 Offset;
-	//glm::vec3 Position;
-	//glm::quat Rotation;
-	uint16_t Position[3];
-	uint16_t Rotation[3];
+	glm::vec3 Position;
+	glm::quat Rotation;
+	//uint16_t Position[3];
+	//uint16_t Rotation[3];
 
 };
 
@@ -74,7 +74,7 @@ private:
 	// 3-2sqrt(2)
 	static inline const float Khi = 0.17157287895679473876953125f;
 
-	static inline const float PosRange = 20.0f;
+	static inline const float PosRange = 2.0f;
 
 	// compression
 	static glm::vec3 QuatFhm(const glm::quat& q)

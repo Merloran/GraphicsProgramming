@@ -13,22 +13,15 @@
 #include "Public/ParticleSystem.h"
 
 #include "Public/Model.h"
-#include "Public/SkinnedModel.h"
 #include "Public/InstancedModel.h"
 #include "Public/Cube.h"
 #include "Public/Quad.h"
 #include "Public/Entity.h"
 
-#include "Public/Animation.h"
-#include "Public/Animator.h"
-
 #include "Public/PointLight.h"
 #include "Public/DirectionalLight.h"
 #include "Public/SpotLight.h"
 #include "Public/Shadow.h"
-
-#include "Public/ColliderAABB.h"
-#include "Public/CollisionManager.h"
 
 #include "Public/Box.h"
 
@@ -124,7 +117,7 @@ int main(int, char**)
 
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Animation & Physics Learning", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL Learning", NULL, NULL);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     if (window == NULL)
     {
@@ -152,6 +145,37 @@ int main(int, char**)
     // Setup style
     ImGui::StyleColorsDark();
 
+    unsigned int amount = 1000000U;
+    std::vector<glm::mat4> modelMatrices;
+    modelMatrices.reserve(amount);
+    srand(glfwGetTime()); // zainicjuj losowe ziarno
+    float radius = 80.0;
+    float offset = 20.0f;
+    for (unsigned int i = 0; i < amount; ++i)
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        // 1. translacja: przesuwaj po okręgu o "promieniu" w zakresie [-offset, offset]
+        float angle = (float)i / (float)amount * 360.0f;
+        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float x = sin(angle) * radius + displacement;
+        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float y = displacement * 0.4f; // keep height of field smaller compared to width of x and z
+        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float z = cos(angle) * radius + displacement;
+        model = glm::translate(model, glm::vec3(x, y, z));
+
+        // 2. Skala: przeskaluj od 0.05 do 0.25f
+        float scale = (rand() % 20) / 100.0f + 0.05;
+        model = glm::scale(model, glm::vec3(scale));
+
+        // 3. rotation: dodaj losow¹ rotacjê wokó³ (pó³) losowo wybranego wektora osi obrotu
+        float rotAngle = (rand() % 360);
+        model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+        // 4. teraz dodaj do listy macierzy
+        modelMatrices.push_back(model);
+    }
+
     glEnable(GL_DEPTH_TEST);
     // set depth function to less than AND equal for skybox depth trick.
     glDepthFunc(GL_LEQUAL);
@@ -164,9 +188,9 @@ int main(int, char**)
     Shader normalShader("res/shaders/Normals.vs", "res/shaders/Normals.fs", "res/shaders/Normals.gs");
     Shader shadowShader("res/shaders/ShadowMap.vs", "res/shaders/ShadowMap.fs");
     Shader instanceShader("res/shaders/Instance.vs", "res/shaders/Instance.fs");
+    Shader blurShader("res/shaders/Screen.vs", "res/shaders/Blur.fs");
     Shader particleShader("res/shaders/Particle.vert", "res/shaders/Particle.frag");
     Shader computeShader("res/shaders/Compute.comp");
-    Shader animationShader("res/shaders/PBR/AnimationPBR.vs", "res/shaders/PBR/PBR.fs");
 
     Shader PBRShader("res/shaders/PBR/PBR.vs", "res/shaders/PBR/PBR.fs");
     Shader equirectangularShader("res/shaders/PBR/CubeMap.vs", "res/shaders/PBR/Equirectangular.fs");
@@ -174,14 +198,10 @@ int main(int, char**)
     Shader prefilterShader("res/shaders/PBR/CubeMap.vs", "res/shaders/PBR/Prefilter.fs");
     Shader BRDFShader("res/shaders/PBR/BRDF.vs", "res/shaders/PBR/BRDF.fs");
 
-    Model cameraModel("res/models/Camera/camera01.gltf");
-    Model cameraModel1("res/models/Camera/camera02.gltf");
-    Model cameraModel2("res/models/Camera/camera03.gltf");
-    SkinnedModel animatedModel("res/models/AnimatedFBX/CesiumMan.gltf");
-    Animation danceAnimation("res/models/AnimatedFBX/CesiumMan.gltf", &animatedModel);
-    Animator animator(&danceAnimation);
-
-
+    Model generator("res/models/generator/generator.obj");
+    InstancedModel box("res/models/box/box.obj", modelMatrices);
+    //Model Scene1 = Model("res/models/sponza/Sponza.gltf");
+    Model Scene2 = Model("res/models/bistro/bistro.gltf");
     // pbr: load the HDR environment map
     // ---------------------------------
     Texture HDR("res/textures/Canyon/Canyon.hdr");
@@ -216,7 +236,7 @@ int main(int, char**)
     };
     for (PointLight& light : pointLights)
     {
-        light.SetIntensity(60.0f);
+        light.SetIntensity(30.0f);
     }
 
     std::vector<DirectionalLight> dirLights =
@@ -228,7 +248,7 @@ int main(int, char**)
     std::vector<SpotLight> spotLights =
     {
         SpotLight(camera.Position, camera.ForwardVector, glm::vec3(1.0f)),
-        SpotLight(glm::vec3(8.0f, 4.5f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f))
+        SpotLight(glm::vec3(-5.0f, 7.0f, 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f))
     };
     for (SpotLight& light : spotLights)
     {
@@ -252,16 +272,17 @@ int main(int, char**)
         lights.push_back(&light);
     }
 
+
     Entity Root;
+    //Root.AddChild(Scene1, "Sponza", PBRShader);
+    //Root.children.back().get()->transform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    //Root.children.back().get()->transform.SetLocalScale(glm::vec3(0.01f));
 
-    Root.AddChild(animatedModel, "AnimatedModel", animationShader);
-    Root.children.back().get()->transform.SetLocalPosition(glm::vec3(8.0f, -2.0f, 0.0f));
+    Root.AddChild(Scene2, "Bistro", PBRShader);
+    Root.children.back().get()->transform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    Root.AddChild(cameraModel2, "CameraModel", PBRShader);
-    Root.children.back().get()->transform.SetLocalScale(glm::vec3(0.01f));
-    Root.children.back().get()->AddChild(cameraModel1, "CameraModel1", PBRShader);
-    Root.children.back().get()->children.back().get()->transform.SetLocalScale(glm::vec3(100.0f));
-    Root.children.back().get()->children.back().get()->AddChild(cameraModel, "CameraModel2", PBRShader);
+    Root.AddChild(generator, "Generator", PBRShader);
+    Root.children.back().get()->transform.SetLocalPosition(glm::vec3(-8.0f, 0.4f, 0.0f));
 
     Root.AddChild(pointLights[0], "PointLight1", lightShader);
     Root.AddChild(pointLights[1], "PointLight2", lightShader);
@@ -270,9 +291,13 @@ int main(int, char**)
     Root.AddChild(dirLights[0], "DirectionalLight", lightShader);
     Root.AddChild(spotLights[1], "SpotLight", lightShader);
 
+    Root.AddChild(box, "CubeRing", instanceShader);
+    Root.children.back().get()->transform.SetLocalPosition(glm::vec3(0.0f, 20.0f, 0.0f));
+
     Root.UpdateSelfAndChildren();
 
     Shadow DirLightShadow(2048, 2048);
+
 
     // Framebuffer for post-processing
     GLuint FBO, CBO[2], RBO;
@@ -314,6 +339,29 @@ int main(int, char**)
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    // ping-pong-framebuffer for blurring
+    GLuint pingpongFBO[2], pingpongCBO[2];
+    {
+        glGenFramebuffers(2, pingpongFBO);
+        glGenTextures(2, pingpongCBO);
+        for (unsigned int i = 0; i < 2; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+            glBindTexture(GL_TEXTURE_2D, pingpongCBO[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WINDOW_WIDTH, WINDOW_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongCBO[i], 0);
+            // also check if framebuffers are complete (no need for depth buffer)
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            {
+                fprintf(stderr, "ERROR::FRAMEBUFFER::Framebuffer is not complete!\n");
+            }
+        }
+    }
+
     GLuint UBO;
     {
         glGenBuffers(1, &UBO);
@@ -344,6 +392,8 @@ int main(int, char**)
     float brightness = 2.0f;
     float bloomStrength = 0.5f;
     float filterRadius = 0.005f;
+    int bloomType = 0;
+    int bloomSamples = 5u;
 
     GLfloat deltaTime = 0.0f;
     GLfloat lastFrame = 0.0f;
@@ -356,6 +406,8 @@ int main(int, char**)
     Texture particleTex("res/textures/Bolt.png", true);
     Texture planeTex("res/textures/plane.jpg", true);
 
+    ParticleSystem Particles(particleTex, 500, 5.0f);
+
     skyBoxShader.Use();
     Environment.BindCubeMap(0);
     skyBoxShader.setInt("skybox", 0);
@@ -363,7 +415,10 @@ int main(int, char**)
     screenShader.Use();
     screenShader.setInt("screenTexture", 0);
     screenShader.setInt("bloomBlur", 1);
-    
+
+    blurShader.Use();
+    blurShader.setInt("image", 0);
+
     PBRShader.Use();
     Irradiance.BindCubeMap(6);
     PBRShader.setInt("irradianceMap", 6);
@@ -374,17 +429,7 @@ int main(int, char**)
     DirLightShadow.BindShadowMap(9);
     PBRShader.setInt("shadowMap", 9);
 
-    animationShader.Use();
-    Irradiance.BindCubeMap(6);
-    animationShader.setInt("irradianceMap", 6);
-    Prefilter.BindCubeMap(7);
-    animationShader.setInt("prefilterMap", 7);
-    BRDF.BindTexture(8);
-    animationShader.setInt("brdfLUT", 8);
-    DirLightShadow.BindShadowMap(9);
-    animationShader.setInt("shadowMap", 9);
-
-    int32_t winWidth = WINDOW_WIDTH, winHeight = WINDOW_HEIGHT;
+    int winWidth = WINDOW_WIDTH, winHeight = WINDOW_HEIGHT;
 
     glfwSetScrollCallback(window, MouseCallback);
     glfwSetKeyCallback(window, KeyCallback);
@@ -395,13 +440,9 @@ int main(int, char**)
     normalShader.setBlock("Matrixes", 0);
     particleShader.setBlock("Matrixes", 0);
     PBRShader.setBlock("Matrixes", 0);
-    animationShader.setBlock("Matrixes", 0);
 
 
-    ColliderAABB TEST(glm::vec3(0.0f), glm::vec3(1.0f));
-    ColliderAABB TEST2(glm::vec3(1.0f), glm::vec3(1.0f));
-    ColliderAABB Tester(glm::vec3(-1.0f), glm::vec3(1.0f, 1.0f, 2.0f));
-
+    Entity* ring = Root.FindByName("CubeRing");
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -429,7 +470,11 @@ int main(int, char**)
             ImGui::SliderFloat("Exposure", &exposure, 0.0f, 20.0f);
             ImGui::SliderFloat("BloomStrength", &bloomStrength, 0.0f, 1.0f);
             ImGui::SliderFloat("FilterRadius", &filterRadius, 0.0f, 0.01f, "%.5f");
+            ImGui::SliderInt("Bloom Samples", &bloomSamples, 0, 15);
             ImGui::Checkbox("Light Gizmos", &Light::isGizmosOn);
+
+            ImGui::RadioButton("Physical based bloom", &bloomType, 0); ImGui::SameLine();
+            ImGui::RadioButton("Gauss blur bloom", &bloomType, 1);
 
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -484,7 +529,6 @@ int main(int, char**)
         }
 
 
-
         Shader::bindUniformData(UBO, 0, sizeof(glm::mat4), glm::value_ptr(view));
         Shader::bindUniformData(UBO, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
 
@@ -535,34 +579,7 @@ int main(int, char**)
             }
         }
 
-        // Tester input
-        {
-            float speed = 0.03f;
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-            {
-                Tester.Center.x += speed;
-            }
-            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-            {
-                Tester.Center.x -= speed;
-            }
-            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-            {
-                Tester.Center.z -= speed;
-            }
-            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-            {
-                Tester.Center.z += speed;
-            }
-            if (glfwGetKey(window, GLFW_KEY_KP_1) == GLFW_PRESS)
-            {
-                Tester.Center.y += speed;
-            }
-            if (glfwGetKey(window, GLFW_KEY_KP_0) == GLFW_PRESS)
-            {
-                Tester.Center.y -= speed;
-            }
-        }
+
         //===============================***PBR***===============================
         PBRShader.Use();
         {
@@ -579,34 +596,12 @@ int main(int, char**)
 
             PBRShader.setVec3("camPos", camera.Position);
         }
-        animationShader.Use();
-        {
-            animator.UpdateAnimation(deltaTime);
-            std::vector<glm::mat4> transforms = animator.GetFinalBoneMatrices();
-            for (int32_t i = 0; i < transforms.size(); ++i)
-            {
-                animationShader.setMat4(("finalBonesMatrices[" + std::to_string(i) + "]").c_str(), transforms[i]);
-            }
-
-            animationShader.setMat4("lightSpace", DirLightShadow.GetLightSpace());
-
-            for (Light* light : lights)
-            {
-                light->SetupShader(animationShader);
-            }
-
-            animationShader.setVec3("camPos", camera.Position);
-        }
+        Particles.Update(computeShader, deltaTime, *Root.FindByName("Generator"));
+        particleShader.Use();
+        particleShader.setMat4("model", Root.FindByName("Generator")->transform.GetModel());
+        Particles.Draw(particleShader);
         Root.DrawSelfAndChildren();
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // TODO: Draw lines insted of swap polygon mode
-        TEST.Draw(lightShader);
-        TEST2.Draw(lightShader);
-        Tester.Draw(lightShader);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        CollisionManager::GetInstance().HandleCollision(TEST, TEST2);
-        CollisionManager::GetInstance().HandleCollision(TEST2, Tester);
-        CollisionManager::GetInstance().HandleCollision(TEST, Tester);
 
         Root.UpdateSelfAndChildren();
 
@@ -617,6 +612,10 @@ int main(int, char**)
         {
             Root.DrawSelfAndChildren(normalShader);
         }
+        glm::vec3 rot = ring->transform.GetLocalRotation();
+        rot.x += 0.5f;
+        rot.z += 0.2f;
+        ring->transform.SetLocalRotation(rot);
         //===============================SKYBOX===============================
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         skyBoxShader.Use();
@@ -632,7 +631,30 @@ int main(int, char**)
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        bloomRenderer.RenderBloomTexture(CBO[1], filterRadius);
+        bool horizontal = true, first_iteration = true;
+        if (bloomType == 0)
+        {
+            bloomRenderer.RenderBloomTexture(CBO[1], filterRadius);
+        }
+        else if (bloomType == 1)
+        {
+            //===============================BLUR===============================
+            blurShader.Use();
+            for (unsigned int i = 0; i < bloomSamples * 2; i++)
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+                blurShader.setInt("horizontal", horizontal);
+                glBindTexture(GL_TEXTURE_2D, first_iteration ? CBO[1] : pingpongCBO[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
+
+                Quad::GetInstance().Draw(blurShader);
+
+                horizontal = !horizontal;
+                if (first_iteration)
+                {
+                    first_iteration = false;
+                }
+            }
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glEnable(GL_CULL_FACE);
@@ -651,7 +673,14 @@ int main(int, char**)
         }
         else
         {
-            glBindTexture(GL_TEXTURE_2D, bloomRenderer.BloomTexture());
+            if (bloomType == 0)
+            {
+                glBindTexture(GL_TEXTURE_2D, bloomRenderer.BloomTexture());
+            }
+            else if (bloomType == 1)
+            {
+                glBindTexture(GL_TEXTURE_2D, pingpongCBO[!horizontal]);
+            }
         }
         screenShader.setFloat("exposure", exposure);
         screenShader.setFloat("gamma", gamma);
@@ -676,6 +705,9 @@ int main(int, char**)
 
     glDeleteFramebuffers(1, &FBO);
     glDeleteTextures(2, CBO);
+
+    glDeleteFramebuffers(2, pingpongFBO);
+    glDeleteTextures(2, pingpongCBO);
 
     glfwDestroyWindow(window);
     glfwTerminate();

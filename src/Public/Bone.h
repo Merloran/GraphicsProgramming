@@ -32,6 +32,8 @@ public:
 
 	int32_t GetPositionIndex(float animationTime);
 	int32_t GetRotationIndex(float animationTime);
+	std::vector<KeyPosition> m_Positions;
+	std::vector<KeyRotation> m_Rotations;
 private:
 
 	float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
@@ -39,8 +41,6 @@ private:
 	glm::mat4 InterpolatePosition(float animationTime);
 	glm::mat4 InterpolateRotation(float animationTime);
 
-	std::vector<KeyPosition> m_Positions;
-	std::vector<KeyRotation> m_Rotations;
 	int32_t m_NumPositions;
 	int32_t m_NumRotations;
 

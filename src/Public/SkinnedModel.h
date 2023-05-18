@@ -3,7 +3,7 @@
 #include "SkinnedMesh.h"
 #include "Texture.h"
 #include "BoneInfo.h"
-#include <map>
+#include <unordered_map>
 
 class Shader;
 
@@ -29,7 +29,7 @@ protected:
     std::vector<SkinnedMesh> m_Meshes;
 
 private:
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    std::unordered_map<std::string, BoneInfo> m_BoneInfoMap;
     int32_t m_BoneCounter = 0;
     std::vector<Texture> m_TexturesLoaded;
     std::string m_Directory;

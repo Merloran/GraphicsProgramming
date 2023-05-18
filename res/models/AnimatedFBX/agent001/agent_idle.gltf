@@ -1,0 +1,267 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.40",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "agent01"
+        }
+    ],
+    "animations" : [
+        {
+            "channels" : [
+                {
+                    "sampler" : 0,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "translation"
+                    }
+                },
+                {
+                    "sampler" : 1,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "rotation"
+                    }
+                },
+                {
+                    "sampler" : 2,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "scale"
+                    }
+                }
+            ],
+            "name" : "10_idleCrouch",
+            "samplers" : [
+                {
+                    "input" : 5,
+                    "interpolation" : "LINEAR",
+                    "output" : 6
+                },
+                {
+                    "input" : 5,
+                    "interpolation" : "LINEAR",
+                    "output" : 7
+                },
+                {
+                    "input" : 5,
+                    "interpolation" : "LINEAR",
+                    "output" : 8
+                }
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "Material.002",
+            "normalTexture" : {
+                "index" : 0,
+                "scale" : 0.009999999776482582
+            },
+            "occlusionTexture" : {
+                "index" : 1
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 2
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 1
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "agent01",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2,
+                        "COLOR_0" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "agent_Normal_DirectX",
+            "uri" : "tex/agent_Normal_DirectX.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "agent_Mixed_AO-agent_Roughness-agent_Metallic",
+            "uri" : "tex/agent_Mixed_AO-agent_Roughness-agent_Metallic.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "agent_Base_color",
+            "uri" : "tex/agent_Base_color.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 21665,
+            "max" : [
+                0.5934966206550598,
+                1.800007700920105,
+                0.2507615089416504
+            ],
+            "min" : [
+                -0.5934966206550598,
+                -0.002381578553467989,
+                -0.1435595601797104
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 21665,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 21665,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 21665,
+            "normalized" : true,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 114228,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 602,
+            "max" : [
+                10.016666666666667
+            ],
+            "min" : [
+                0
+            ],
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 602,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 602,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 602,
+            "type" : "VEC3"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 259980,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 259980,
+            "byteOffset" : 259980
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 173320,
+            "byteOffset" : 519960
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 173320,
+            "byteOffset" : 693280
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 228456,
+            "byteOffset" : 866600
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2408,
+            "byteOffset" : 1095056
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 7224,
+            "byteOffset" : 1097464
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 9632,
+            "byteOffset" : 1104688
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 7224,
+            "byteOffset" : 1114320
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1121544,
+            "uri" : "agent_idle.bin"
+        }
+    ]
+}

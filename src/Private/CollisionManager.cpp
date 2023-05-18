@@ -64,7 +64,9 @@ void CollisionManager::HandleCollision(ColliderAABB& A, ColliderAABB& B)
             Direction.z * Direction.z < Direction.x * Direction.x ? Direction.x = 0.0f : Direction.z = 0.0f;
         }
 
-        B.Center -= Direction;
+        const float SlideSpeed = 4.0f / 5.0f;
+        A.Center += Direction * SlideSpeed;
+        B.Center -= Direction * (1.0f - SlideSpeed);
     }
 }
 

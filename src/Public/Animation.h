@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include "Public/Bone.h"
 #include <string>
-#include <map>
+#include <unordered_map>
 
 class aiAnimation;
 class aiNode;
@@ -12,9 +12,12 @@ class SkinnedModel;
 
 struct AssimpNodeData
 {
-	glm::mat4 transformation;
+	//glm::mat4 transformation;
+	glm::vec3 position;
+	glm::quat rotation;
+	//uint16_t position[3];
+	//uint16_t rotation[3];
 	std::string name;
-	int32_t childrenCount;
 	std::vector<AssimpNodeData> children;
 };
 
@@ -32,7 +35,7 @@ public:
 	float GetTicksPerSecond();
 	float GetDuration();
 	const AssimpNodeData& GetRootNode();
-	const std::map<std::string, BoneInfo>& GetBoneIDMap();
+	const std::unordered_map<std::string, BoneInfo>& GetBoneIDMap();
 
 private:
 	void ReadMissingBones(const aiAnimation* animation, SkinnedModel& model);
@@ -42,6 +45,6 @@ private:
 	int m_TicksPerSecond;
 	std::vector<Bone> m_Bones;
 	AssimpNodeData m_RootNode;
-	std::map<std::string, BoneInfo> m_BoneInfoMap;
+	std::unordered_map<std::string, BoneInfo> m_BoneInfoMap;
 };
 

@@ -13,7 +13,7 @@ layout (std140) uniform Matrixes
 uniform mat4 model;
 uniform mat4 lightSpace;
 
-const int MAX_BONES = 100;
+const int MAX_BONES = 512;
 const int MAX_BONE_INFLUENCE = 4;
 uniform mat4 finalBonesMatrices[MAX_BONES];
 
@@ -34,7 +34,7 @@ void main()
 
     for(int i = 0; i < MAX_BONE_INFLUENCE; ++i)
     {
-        if(skinIndices[i] >= 0 && skinIndices[i] < MAX_BONES)
+        if(skinWeights[i] > 0.0f && skinIndices[i] < MAX_BONES)
         {
             const mat4 bone = finalBonesMatrices[skinIndices[i]];
             const float weight = skinWeights[i];
