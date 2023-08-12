@@ -19,15 +19,29 @@ Aby zbudować projekt, wchodzimy do folderu _OpenGLGP_ i wywołujemy następują
 cmake -B Build
 ```
 
-To polecenie stworzy w folderze Build solucję Visual Studio 2019 (zakładając, że działamy na komputerze wyposażonym w system Windows i IDE Visual Studio 2019).
+To polecenie stworzy w folderze Build solucję Visual Studio 2022 (zakładając, że działamy na komputerze wyposażonym w system Windows i IDE Visual Studio 2022).
 
-By uruchomić projekt za pomocą VS 2019, wchodzimy do folderu _Build_, otwieramy solucję _OpenGLGP.sln_. Następnie, klikamy prawym przyciskiem myszy na projekcie _OpenGLGP_ i wybieramy opcję _Ustaw jako projekt domyślny / Set as a startup project_. Następnie budujemy i uruchamiamy aplikację.
+By uruchomić projekt za pomocą VS 2022, wchodzimy do folderu _Build_, otwieramy solucję _OpenGLGP.sln_. Następnie, klikamy prawym przyciskiem myszy na projekcie _OpenGLGP_ i wybieramy opcję _Ustaw jako projekt domyślny / Set as a startup project_. Następnie budujemy i uruchamiamy aplikację.
 
-Jeżeli korzystamy z IDE Clion (jest darmowa licencja dla studentów) lub Visual Studio 2019 Community, wystarczy wybrać w nim opcję otwarcia projektu, i z folderu OpenGLGP wybrać plik _CMakeLists.txt_. Następnie Clion / Visual Studio 2019 sam uruchomi skrypt CMake i pobierze odpowiednie biblioteki. Możemy teraz zbudować i uruchomić projekt.
+Jeżeli korzystamy z IDE Clion (jest darmowa licencja dla studentów) lub Visual Studio 2022 Community, wystarczy wybrać w nim opcję otwarcia projektu, i z folderu OpenGLGP wybrać plik _CMakeLists.txt_. Następnie Clion / Visual Studio 2019 sam uruchomi skrypt CMake i pobierze odpowiednie biblioteki. Możemy teraz zbudować i uruchomić projekt.
 
 W obu przypadkach powinno pojawić się okienko, w którym renderowane jest przykładowe GUI za pomocą biblioteki ImGUI. 
 
 __Dokumentacja__ ImGUI znajduje się w pliku _thirdparty/imgui/imgui.cpp_.
+
+Aplikacja wymaga karty graficznej obsługującej GLSL w wersji 460.
+
+W programie zaimplementowano:
+- PBR
+- IBL
+- Wsparcie dla świateł kierunkowych, reflektorowych i punktowych z reprezentacjami gizm
+- Shadow mapping z PCF dla świateł kierunkowych
+- Rendering instancjonowany dla 1mln obiektów
+- Bloom
+- Efekt cząsteczkowy z wykorzystaniem compute shadera
+
+Sterowanie w scenie odbywa się za pomocą WSAD oraz spcja w górę i shift w dół
+Aby przełączyć się na sterowanie w scenie należy wcisnąć klawisz E (tj. wyłączyć kursor myszy)
 
 Widok poprawnie zbudowanej i uruchomionej przykładowej aplikacji:
 ![Przykładowe okienko po poprawnym zbudowaniu projektu i uruchomieniu aplikacji](example.png)
